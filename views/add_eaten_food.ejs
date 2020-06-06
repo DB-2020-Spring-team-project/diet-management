@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <script type='text/javascript' src='./jquery/lib/jquery.js'></script>
+        <script type='text/javascript' src='./jquery/lib/jquery.bgiframe.min.js'></script>
+        <script type='text/javascript' src='./jquery/lib/jquery.ajaxQueue.js'></script>
+        <script type='text/javascript' src='./jquery/jquery.autocomplete.js'></script>
+        <link rel="stylesheet" type="text/css" href="jquery/jquery.autocomplete.css" />
+    </head>
+
+    <body>
+        <script>
+            var foods = [];
+            <% for(var i=0; i<food_names.length; i++){%>
+                foods[<%=i%>] = "<%=food_names[i]%>"; <% } %>;
+        </script>
+
+        <h1>음식추가</h1>
+        <form action='/add_eaten_food' method='post'>
+            <p>
+                id : 
+                <input type='text' name='userid'> 
+            </p>
+            <p>
+                날짜 :
+                <input type='date' name='date'>
+            </p>
+            <p>
+                음식이름 : 
+                <input type='text' id='food' name='food'>
+            </p>
+                <input type='submit' value='등록하기'>
+        </form>
+        <script>
+            $(document).ready(function() {
+                $("#food").autocomplete( foods, {
+                    matchContains: true,   
+                    selectFirst: false
+                });
+            });
+        </script>
+    </body>
+</html>
+            
