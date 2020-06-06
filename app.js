@@ -1,14 +1,14 @@
 
 var express = require('express');
 var mysql = require('mysql');
-  
 var bodyParser = require("body-parser");
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 var flash = require('connect-flash');
+var app = express();
+app.use(express.static(__dirname+'/public'));
 var _= require('lodash');
 
-var app = express();
 
 // var index = require('./routes/index');
 // var users = require('./routes/users');
@@ -19,6 +19,7 @@ var LocalStrategy = require('passport-local').Strategy
 
 
 app.set('view engine', 'ejs');
+
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -119,6 +120,7 @@ app.get('/add_eaten_food', (req, res) => {
 
 
 
+
 //store express session to maintain user's info
 app.use(session({
   secret : 'MYSECRETSECRET', //key value for sesssion
@@ -184,6 +186,7 @@ app.post("/register", async(req, res)=>{
     var q = 'insert into user set ?'
     connection.query(q, user, function (error, results) {
     if (error) throw error;
+    console.log("Data inserted!");
     });
   }catch{
     res.redirect('/');
@@ -216,8 +219,8 @@ passport.use(new LocalStrategy({
       if(user.password != password){
           return done(null, false,{message:'Invalid id or password.'});
        }
-       console.log('what return: ' + user);
-      return done(null, user);
+       //console.log('what return: ' + user);
+      return done(null, {'id':username});
     });
   }
 ));
@@ -230,18 +233,84 @@ app.post("/login", passport.authenticate('local', {
 })
 );
 
+//passport auth check//
+var isAuthenticated = function(req, res, next){
+  if(req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+}
+
+//diary. Can use this, when user is logged in.
+
+app.get("/diary", isAuthenticated, function(req, res){
+  var q = "select DATE_FORMAT(date, \'%y-%m-%d\') as d, comment from diary where user_id = ?"
+  connection.query(q, [req.user.id], function(err, rows){
+      console.log(err);
+      console.log(rows);
+      res.render('diary', {user:req.user.id, rows: rows})
+  });
+
+  //console.log(req.user.id);
+});
+
+
+app.post("/diary", isAuthenticated,function(req, res){
+  //console.log(req.user.id);
+  //res.render('diary', {user:req.user.id);
+  var diary = {
+    user_id: req.user.id,
+    comment: req.body.comment
+  };
+  var q = 'insert into diary set ?'
+  connection.query(q, diary, function (error, results) {
+  if (error) throw error;
+  console.log("Data inserted!");
+  res.redirect('/diary');
+  });
+});
+
+app.get("/weight", isAuthenticated, function(req, res){
+  var q = "select DATE_FORMAT(date, \'%y-%m-%d\') as d, weight from weigth_diary where user_id = ?"
+  connection.query(q, [req.user.id], function(err, rows){
+      console.log(err);
+      console.log(rows);
+      res.render('weight', {user:req.user.id, rows: rows})
+  });
+
+  //console.log(req.user.id);
+});
+
+
+app.post("/weight", isAuthenticated,function(req, res){
+  //console.log(req.user.id);
+  //res.render('diary', {user:req.user.id);
+  var weigth_diary = {
+    user_id: req.user.id,
+    weight: req.body.weight
+  };
+  var q = 'insert into weigth_diary set ?'
+  connection.query(q, weigth_diary, function (error, results) {
+  if (error) throw error;
+  console.log("Data inserted!");
+  res.redirect('/weight');
+  });
+});
+
+
 // when login is successful
 passport.serializeUser(function(user, done){
   //console.log('serial: '+ user.id);
-    done(null, user.id);
+    //session store
+    done(null, user);
 });
 
-passport.deserializeUser(function(id, done){
-    connection.query("select * from user where 'id' = ?" , [id], function (err, user){
-      //console.log('deserial: '+ user);
-        done(err, user);
-    });
-});
+passport.deserializeUser(function(user, done){
+    // connection.query("select * from user where 'id' = ?" , [id], function (err, user){
+    //   //console.log('deserial: '+ user);
+    //     done(err, user);
+    // });
+    done(null, user);
+
 
 
 
@@ -252,6 +321,7 @@ app.get('/logout', function(req, res){
     req.logout();
     res.redirect('/login');
 });
+
 
 app.get('/feedback/:userid/:date', function(req, res){
     var date = req.params.date;
@@ -451,9 +521,12 @@ app.use(function(req, res, next) {
 });
 
 
+
 //module.exports = app;
+
 
 app.listen(10000, function () {
  console.log('App listening on port 10000!');
 });
+
 
