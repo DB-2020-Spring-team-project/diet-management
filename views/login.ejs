@@ -2,15 +2,16 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="/stylesheets/style.css">
     <title></title>
   </head>
   <body>
+<form class = "box" method="POST" action='/login'>
     <h1>Login</h1>
-<form method="POST" action='/login'>
- <label>id :</label><input type="text" class="form" name="id"><br>
- <label class="pw">pw :</label><input type="password" class="form" name="password">
-<button type="submit"> 로그인</button>
+ <input type="text" name="id" placeholder="User Id">
+ <input type="password" name="password" placeholder="Password">
+<input type="submit" name="submit" value="Login">
+<a href = "/register" >Back to register page</a>
 </form>
-  <a href = "/register">Back to register page</a>
   </body>
 </html>
