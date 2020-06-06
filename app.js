@@ -61,14 +61,19 @@ var connection = mysql.createConnection({
 
 
 
+var isAuthenticated = function(req, res, next){
+  if(req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+}
 
 
 
 //TODO: sementic query로 받은 id를 session으로 받아야 함.
-app.post('/add_eaten_food', (req, res) => {
+app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     var date = req.body.date;
     var food = req.body.food;
-    var userid = req.body.userid;
+    var userid = req.user.id;
 
     var eaten_nutrients = {};
     var nutrients = [];
@@ -233,11 +238,6 @@ app.post("/login", passport.authenticate('local', {
 );
 
 //passport auth check//
-var isAuthenticated = function(req, res, next){
-  if(req.isAuthenticated())
-    return next();
-  res.redirect('/login');
-}
 
 //diary. Can use this, when user is logged in.
 
@@ -322,9 +322,9 @@ app.get('/logout', function(req, res){
 });
 
 
-app.get('/feedback/:userid/:date', function(req, res){
+app.get('/feedback/:date', isAuthenticated,function(req, res){
     var date = req.params.date;
-    var id = req.params.userid;
+    var id = req.user.id;
     var feedback;
     var goodfeedback=new Array();
     var excessfeedback=new Array();
@@ -520,7 +520,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.listen(10000,  function() {
+app.listen(3000,  function() {
  console.log('App listening on port 10000!');
 });
 
