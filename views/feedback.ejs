@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>오늘의 피드백</title>
+  </head>
+  <body>
+    <h1><%=id%>의 <%=date%>피드백</h1>
+    <button type = "button" onclick="location.href='/home'">home</button>   
+    <h3>오늘 먹은 음식<h3>
+        <ul>
+            <%for ( var i = 0; i < foods.length; i++){%>
+                <li>
+                   <%=foods[i].food%>
+                </li>
+            <%}%>
+        </ul>
+        <div style="float :left; width: 33%;">    
+            <h3>적당 영양분<h3>
+                <ul>
+                    <%for ( var i = 0; i < goodfeedback.length; i++){%>
+                        <li>
+                            <%=goodfeedback[i].nutrients%>를 적당량 먹었습니다.
+                        </li>
+                    <%}%>
+                </ul>
+        </div>
+        <div style="float :left; width: 33%;">    
+            <h3>초과 영양분<h3>
+                <ul>
+                    <%for ( var i = 0; i < excessfeedback.length; i++){%>
+                        <li>
+                            <%=excessfeedback[i].nutrients%>를 <%=excessfeedback[i].amount%>%만큼 초과하셨습니다.
+                        </li>
+                    <%}%>
+                </ul>
+        </div>
+        <div style="float :left; width: 33%;">    
+            <h3>부족 영양분<h3>
+                <ul>
+                    <%for ( var i = 0; i < lackfeedback.length; i++){%>
+                        <li>
+                            <%=lackfeedback[i].nutrients%>가 <%=lackfeedback[i].amount%>%만큼 부족합니다..
+                        </li>
+                    <%}%>
+                </ul>
+        </div>
+    <h1>오늘의 먹은 <%=kcal%> 칼로리 소비를 위한 운동</h1>
+    <h3>
+        <ul>
+            <%for (var i = 0 ; i < sports.length ; i++){%>
+                <li>
+                    <%=sports[i].sport_name%>를(을) <%=sports[i].time%> 분 해야됩니다.
+                </li>
+            <%}%>
+        </ul>
+    </h3>>
+  </body>
+</html>
