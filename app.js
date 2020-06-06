@@ -23,6 +23,25 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+//store express session to maintain user's info
+app.use(session({
+  secret : 'MYSECRETSECRET', //key value for sesssion
+  resave : false,
+  saveUninitialized : true,
+  // store : new MySQLStore({
+  //   host: 'localhost',
+  //   port: 3000,
+  //   user: 'root',
+  //   password: '',
+  //   database: 'practice'
+  // })
+  cookie:{secure: false}
+}));
+
+//passpot module initialization
+app.use(flash());
+app.use(passport.initialize()); //passport initialize
+app.use(passport.session());
 
 const sync_mysql      = require('sync-mysql');
 
@@ -121,25 +140,6 @@ app.get('/add_eaten_food', (req, res) => {
 
 
 
-//store express session to maintain user's info
-app.use(session({
-  secret : 'MYSECRETSECRET', //key value for sesssion
-  resave : false,
-  saveUninitialized : true,
-  // store : new MySQLStore({
-  //   host: 'localhost',
-  //   port: 3000,
-  //   user: 'root',
-  //   password: '',
-  //   database: 'practice'
-  // })
-  cookie:{secure: false}
-}));
-
-//passpot module initialization
-app.use(flash());
-app.use(passport.initialize()); //passport initialize
-app.use(passport.session());
 
 // app.use('/', index);
 // app.use('/users', users);
@@ -192,7 +192,6 @@ app.post("/register", async(req, res)=>{
     res.redirect('/');
   }
   console.log(user);
-
 
 });
 
@@ -310,7 +309,7 @@ passport.deserializeUser(function(user, done){
     //     done(err, user);
     // });
     done(null, user);
-
+});
 
 
 
@@ -521,11 +520,7 @@ app.use(function(req, res, next) {
 });
 
 
-
-//module.exports = app;
-
-
-app.listen(10000, function () {
+app.listen(10000,  function() {
  console.log('App listening on port 10000!');
 });
 
