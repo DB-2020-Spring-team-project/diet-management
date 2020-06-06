@@ -377,24 +377,28 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
 });
 
-app.get('/water', function(req, res) { 
+app.get('/water', isAuthenticated,function(req, res) { 
 
+   var userid = req.user.id;
+   var today = new Date();
+   var month = today.getUTCMonth() + 1;
+   var day = today.getUTCDate();
+   var year = today.getUTCFullYear();
+   today = year + "-" + month + "-" + day;
         
-  var sql = 'SELECT * FROM water_diary';
-  connection.query(sql, function(err, rows, fields){
+  var sql = 'SELECT * FROM water_diary where user_id = ? and date = ?';
+  connection.query(sql,[userid,today] ,function(err, row, fields){
       if(err){
         console.log(err);
       }
       else {
-        for(var i=0; i<rows.length; i++){
-          console.log(rows[i].cups);
-        }
+        console.log(row[0].cups);
       }
 
     var title = 'Welcome!';
     var description = '오늘 마신 물의 컵수를 선택해주세요~';
-    var cups = rows[0].cups;
-    var user = rows[0].user_id;
+    var cups = row[0].cups;
+    var user = row[0].user_id;
 
  
     res.render('water_home', {title:title, description:description, cups:cups, user:user});
@@ -404,10 +408,17 @@ app.get('/water', function(req, res) {
 
 }); //app
 
-app.get('/water/page/:pageId', function(req, res) { 
+app.get('/water/page/:pageId', isAuthenticated, function(req, res) { 
     var title = req.params.pageId;
-    var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE id=?';
-      var params = ["yumin",title,"2020-06-01",1];
+    var userid = req.user.id;
+    var today = new Date();
+    var month = today.getUTCMonth() + 1;
+    var day = today.getUTCDate();
+    var year = today.getUTCFullYear();
+    today = year + "-" + month + "-" + day;
+
+    var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE user_id=? and date=?';
+    var params = [userid, title, today, userid, today];
        
       connection.query(sql,params, function(err, rows, fields){
         if(err){
