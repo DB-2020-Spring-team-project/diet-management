@@ -216,7 +216,7 @@ app.get('/feedback/:userid/:date', function(req, res){
     });
 });
 
-app.get('/', function(request, response) { 
+app.get('/water', function(request, response) { 
 
   /*var sql = 'SELECT * FROM water_diary';
   db.query(sql, function(err, rows, fields){*/
@@ -244,7 +244,7 @@ app.get('/', function(request, response) {
       <meta charset="utf-8">
     </head>
     <body>
-      <h1><a href="/">${user}의 수분 섭취 기록</a></h1>
+      <h1><a href="/water">${user}의 수분 섭취 기록</a></h1>
       <h2>${title}</h2>
       <h3>현재까지 마신 컵수 : ${cups}컵</h3>
       <p>${description}</p>
@@ -295,7 +295,7 @@ app.get('/page/:pageId', function(request, response) {
             <meta charset="utf-8">
         </head>
         <body>
-            <h1><a href="/">수분 섭취 기록</a></h1>
+            <h1><a href="/water">수분 섭취 기록</a></h1>
             <h2>${title}컵을 마셨어요~</h2>
             <p>${description}</p>
             <ul>
@@ -327,7 +327,7 @@ app.get('/page/:pageId', function(request, response) {
             <meta charset="utf-8">
         </head>
         <body>
-            <h1><a href="/">수분 섭취 기록</a></h1>
+            <h1><a href="/water">수분 섭취 기록</a></h1>
             <h2>${title}컵을 마셨어요~</h2>
             <p>${description}</p>
             <ul>
@@ -362,7 +362,7 @@ app.use(function(req, res, next) {
 
 //module.exports = app;
 
-app.listen(3000, function () {
- console.log('App listening on port 3000!');
+app.listen(10000, function () {
+ console.log('App listening on port 10000!');
 });
 
