@@ -144,6 +144,49 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     res.render('add_success', {userid: userid, food: food, date:date});
 });
 
+app.get('/like_food', isAuthenticated,(req, res) => {
+  var userid = req.user.id;
+  var like_foods = new Array();
+  var food_names = [];
+  var rows;
+  query = 'SELECT food_name_lf AS food FROM like_food where user_id = ?';
+  rows = sync_connection.query(query, [userid]);
+  like_foods = _.cloneDeep(rows);
+
+  rows = sync_connection.query('select name from food');
+  var i = 0;
+  while(rows[i]) {
+    food_names[i] = rows[i].name;
+    i++;
+  }
+
+  res.render('like_food', {like_foods: like_foods, food_names:food_names, userid: userid});
+});
+
+app.post('/like_food', isAuthenticated,(req, res) => {
+  var food = req.body.food;
+  var userid = req.user.id;
+  var query=  'SELECT * FROM food where name="' + food + '"';
+  //varidation
+  var rows = sync_connection.query(query);
+  if(!rows[0]){
+    res.render('like_food_failed', {food: food});
+    return;
+  }
+  
+  var like_food = {
+    food_name_lf: food,
+    user_id: userid
+  };
+  query = 'INSERT INTO like_food set ?';
+  connection.query(query, like_food, (error, results)=>{
+    if (error) throw error;
+    res.redirect('/like_food');
+  });
+  
+  
+});
+
 
 app.get('/add_eaten_food', (req, res) => {
     var foods = [];
