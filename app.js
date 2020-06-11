@@ -1,4 +1,3 @@
-
 var express = require('express');
 
 var mysql = require('mysql');
@@ -22,6 +21,8 @@ var LocalStrategy = require('passport-local').Strategy
 app.set('view engine', 'ejs');
 
 app.set('views', './views');
+
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 //store express session to maintain user's info
@@ -141,9 +142,6 @@ app.get('/add_eaten_food', (req, res) => {
     res.render('add_eaten_food', {food_names:foods});
     
 });
-
-
-
 
 
 
@@ -377,6 +375,11 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
 });
 
+app.get("/month", isAuthenticated, function(req, res){
+  var userid = req.user.id;
+  res.render('month', {userid:userid})
+});
+
 app.get('/water', isAuthenticated,function(req, res) { 
 
    var userid = req.user.id;
@@ -385,7 +388,16 @@ app.get('/water', isAuthenticated,function(req, res) {
    var day = today.getUTCDate();
    var year = today.getUTCFullYear();
    today = year + "-" + month + "-" + day;
-        
+
+   //오늘 해당 유저의 수분 섭취 기록 없으면 0컵으로 insert
+    var sql = 'INSERT INTO water_diary (user_id, cups, date) SELECT * FROM (SELECT "' + userid + '" , 0, "' + today + '") AS tmp WHERE NOT EXISTS (SELECT user_id, date FROM water_diary WHERE user_id= ? AND date =?) LIMIT 1';
+    var params = [userid, today];
+    connection.query(sql, params ,function(err, row, fields){
+      if(err)
+        console.log(err)
+    });
+
+  //해당 유저가 어떤 날 마신 
   var sql = 'SELECT * FROM water_diary where user_id = ? and date = ?';
   connection.query(sql,[userid,today] ,function(err, row, fields){
       if(err){
@@ -441,8 +453,6 @@ app.get('/water/page/:pageId', isAuthenticated, function(req, res) {
     });
 });
  
-
-       
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
