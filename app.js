@@ -96,7 +96,7 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     //nutrients 종류 저장
     rows = sync_connection.query("SELECT details from nutrient");
     for(var i = 0; rows[i]; i++) {
-        nutrients[i] = rows[i].details;   
+        nutrients[i] = rows[i].details;
     }
 
     //선택한 food에 대한 영양소 저장
@@ -153,7 +153,7 @@ app.get('/add_eaten_food', (req, res) => {
         i++;
     }
     res.render('add_eaten_food', {food_names:foods});
-    
+
 });
 
 
@@ -173,7 +173,7 @@ app.get("/'welcome'", function(req, res){
 });
 
 app.get("/home", function(req, res){
- var q = "select quote from quote order by rand() limit 1";
+ var q = "select quote from quote where id= curdate() mod 10;";
  connection.query(q, function (error, result) {
  if (error) throw error;
  //console.log(result[0]);
@@ -207,9 +207,10 @@ app.post("/register", async(req, res)=>{
     connection.query(q, user, function (error, results) {
     if (error) throw error;
     console.log("Data inserted!");
+    res.redirect('/login');
     });
   }catch{
-    res.redirect('/');
+    res.redirect('/register');
   }
   console.log(user);
 
@@ -356,7 +357,7 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
     connection.query(qsport,function(err,data){
       if(err) throw err;
-      sports = _.cloneDeep(data);    
+      sports = _.cloneDeep(data);
     });
     connection.query(qfeedback,[id,date],function(err,data){
       if(err) throw err;
@@ -390,9 +391,9 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
 });
 
-app.get('/water', function(req, res) { 
+app.get('/water', function(req, res) {
 
-        
+
   var sql = 'SELECT * FROM water_diary';
   connection.query(sql, function(err, rows, fields){
       if(err){
@@ -409,19 +410,19 @@ app.get('/water', function(req, res) {
     var cups = rows[0].cups;
     var user = rows[0].user_id;
 
- 
+
     res.render('water_home', {title:title, description:description, cups:cups, user:user});
-          
-    
+
+
   }); //connection
 
 }); //app
 
-app.get('/water/page/:pageId', function(req, res) { 
+app.get('/water/page/:pageId', function(req, res) {
     var title = req.params.pageId;
     var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE id=?';
       var params = ["yumin",title,"2020-06-01",1];
-       
+
       connection.query(sql,params, function(err, rows, fields){
         if(err){
           console.log(err);
@@ -437,14 +438,14 @@ app.get('/water/page/:pageId', function(req, res) {
     }
     else{
         var description = '아직 부족해요~!';
-        
+
         res.render('water_cups', {title:title, description:description});
       }
     });
 });
- 
 
-       
+
+
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -457,5 +458,3 @@ app.use(function(req, res, next) {
 app.listen(10000,  function() {
  console.log('App listening on port 10000!');
 });
-
-
