@@ -334,7 +334,6 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     var kcal;
     var foods=new Array();
     var qfood='select user_id,date,food_name_ef as food from eaten_food where date = ? and user_id = ?';
-    //var qfeedback = 'select RT.user_id, RT.date, RT.nutrients, RT.eaten_amount as amount, LT.min,LT.max from standard_nutrient as LT join (select RT.id as s_id, LT.* from (select LT.id as user_id, LT.sex as user_sex, LT.age as user_age, RT.date as date, RT.eaten_nutrient_details as nutrients, RT.eaten_amount as eaten_amount from user as LT join (select * from eaten_nutrient where user_id = ? and date = ?)   as RT on RT.user_id = LT.id) as LT join standard as RT on RT.sex = LT.user_sex and LT.user_age>=RT.from_age and LT.user_age <= RT.to_age) as RT on LT.standard_nutrient_details = RT.nutrients and LT.standard_id = RT.s_id';
     var qfeedback = 'SELECT user_id, date, nutrients, amount, min,max FROM feedback WHERE user_id = ? and date = ?';
     var qsport = 'select sports_name, consumption from sports order by rand() limit 3';
     connection.query(qfood,[date,id],function(err,data){
@@ -441,7 +440,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.listen(3000,  function() {
+app.listen(10000,  function() {
  console.log('App listening on port 10000!');
 });
 
