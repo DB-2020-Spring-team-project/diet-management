@@ -81,7 +81,17 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     var query = '';
     var rows;
 
-    //유효성 검사 about user, food
+    //유효성 검사 about food and date
+
+    var datatimeRegexp = /[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/;
+  
+    query = 'SELECT * FROM food where name="' + food + '"';
+    
+    rows = sync_connection.query(query);
+    if(!datatimeRegexp.test(date) || !rows[0]){
+      res.render('add_failed', {food: food});
+      return;
+    }
 
     //nutrients 종류 저장
     rows = sync_connection.query("SELECT details from nutrient");
@@ -108,8 +118,10 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
             var amount = eaten_nutrients[nutrients[i]];
             if(!amount) amount = 0.0;
             query = query_header + amount + ' WHERE eaten_nutrient_details = "' + nutrients[i] + '" ' + query_footer;
-            //update구문
-            sync_connection.query(query);
+            //update구문 -- asynchronous 하게 변경.
+            connection.query(query, function (error, result) {
+              if (error) throw error;
+            });
         }
 
     }
@@ -119,8 +131,10 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
             var amount = eaten_nutrients[nutrients[i]];
             if(!amount) amount = 0.0;
             query = query_header + nutrients[i] + '", ' + amount + ')';
-            //insert구문
-            sync_connection.query(query);
+            //insert구문 -- asynchronous 하게 변경.
+            connection.query(query, function (error, result) {
+              if (error) throw error;
+            });
         }
     }
 
