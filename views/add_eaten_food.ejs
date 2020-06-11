@@ -11,6 +11,9 @@
     </head>
 
     <body>
+      <a href ="/home" ><img src="https://image.flaticon.com/icons/svg/2948/2948025.svg" class="home"></a>
+      <a href='/logout' > <img src="https://image.flaticon.com/icons/svg/126/126467.svg" class="home logout"></a>
+      <div class="eaten_food">
         <script>
             var foods = [];
             <% for(var i=0; i<food_names.length; i++){%>
@@ -24,7 +27,7 @@
                 <input type='date' name='date'>
             </p>
             <p>
-                음식이름 : 
+                음식 :
                 <input type='text' id='food' name='food'>
             </p>
                 <input type='submit' value='등록하기'>
@@ -32,11 +35,11 @@
         <script>
             $(document).ready(function() {
                 $("#food").autocomplete( foods, {
-                    matchContains: true,   
+                    matchContains: true,
                     selectFirst: false
                 });
             });
         </script>
+        </div>
     </body>
 </html>
-            

@@ -6,8 +6,10 @@
     <title>오늘의 피드백</title>
   </head>
   <body>
+    <a href ="/home" ><img src="https://image.flaticon.com/icons/svg/2948/2948025.svg" class="home"></a>
+    <a href='/logout' > <img src="https://image.flaticon.com/icons/svg/126/126467.svg" class="home logout"></a>
     <h1><%=id%>의 <%=date%>피드백</h1>
-    <button type = "button" onclick="location.href='/home'">home</button>   
+    <!-- <button type = "button" onclick="location.href='/home'">home</button> -->
     <h3>오늘 먹은 음식<h3>
         <ul>
             <%for ( var i = 0; i < foods.length; i++){%>
@@ -16,7 +18,7 @@
                 </li>
             <%}%>
         </ul>
-        <div style="float :left; width: 33%;">    
+        <div style="float :left; width: 33%;">
             <h3>적당 영양분<h3>
                 <ul>
                     <%for ( var i = 0; i < goodfeedback.length; i++){%>
@@ -26,7 +28,7 @@
                     <%}%>
                 </ul>
         </div>
-        <div style="float :left; width: 33%;">    
+        <div style="float :left; width: 33%;">
             <h3>초과 영양분<h3>
                 <ul>
                     <%for ( var i = 0; i < excessfeedback.length; i++){%>
@@ -36,7 +38,7 @@
                     <%}%>
                 </ul>
         </div>
-        <div style="float :left; width: 33%;">    
+        <div style="float :left; width: 33%;">
             <h3>부족 영양분<h3>
                 <ul>
                     <%for ( var i = 0; i < lackfeedback.length; i++){%>
