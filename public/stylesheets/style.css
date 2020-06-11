@@ -5,6 +5,8 @@ body{
   font-family: 'Open Sans', Verdana, Geneva, Tahoma, sans-serif;
   background: #34495e;
 }
+
+/* login page */
 .box{
   width: 300px;
   padding: 40px;
@@ -65,6 +67,8 @@ body{
 }
 
 
+/* welcome page */
+
 .form{
   width: 350px;
   padding: 40px;
@@ -107,4 +111,55 @@ body{
   width: 220px;
   background: #2ecc71;
   border-color: #2ecc71;
+}
+
+
+
+
+/* Sign up page */
+.signup-form{
+  width: 400px;
+  padding:20px;
+  text-align:center;
+  background: #191919;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.signup-form h1{
+  color: white;
+}
+
+.signup-form a{
+  color: #6D7781;
+}
+
+.signup-form input{
+width: 200px;
+padding: 10px 0px;
+background: transparent;
+border: 0;
+border-bottom: 1px solid #435160;
+outline: none;
+color: #6D7781;
+font-size: 16px;
+}
+
+
+.signup-form input[type="submit"]{
+  background: #3498db;
+  border: 0;
+  width: 250px;
+  height: 40px;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  display: block;
+  margin: 15px auto;
+}
+.signup-form input[type = "submit"]:hover{
+  animation-name: shake;
 }

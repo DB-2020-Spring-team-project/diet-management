@@ -1,4 +1,3 @@
-
 var express = require('express');
 
 var mysql = require('mysql');
@@ -22,6 +21,8 @@ var LocalStrategy = require('passport-local').Strategy
 app.set('view engine', 'ejs');
 
 app.set('views', './views');
+
+
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 //store express session to maintain user's info
@@ -96,7 +97,7 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     //nutrients 종류 저장
     rows = sync_connection.query("SELECT details from nutrient");
     for(var i = 0; rows[i]; i++) {
-        nutrients[i] = rows[i].details;   
+        nutrients[i] = rows[i].details;
     }
 
     //선택한 food에 대한 영양소 저장
@@ -153,11 +154,8 @@ app.get('/add_eaten_food', (req, res) => {
         i++;
     }
     res.render('add_eaten_food', {food_names:foods});
-    
+
 });
-
-
-
 
 
 
@@ -173,7 +171,7 @@ app.get("/'welcome'", function(req, res){
 });
 
 app.get("/home", function(req, res){
- var q = "select quote from quote order by rand() limit 1";
+ var q = "select quote from quote where id= curdate() mod 10;";
  connection.query(q, function (error, result) {
  if (error) throw error;
  //console.log(result[0]);
@@ -207,9 +205,10 @@ app.post("/register", async(req, res)=>{
     connection.query(q, user, function (error, results) {
     if (error) throw error;
     console.log("Data inserted!");
+    res.redirect('/login');
     });
   }catch{
-    res.redirect('/');
+    res.redirect('/register');
   }
   console.log(user);
 
@@ -340,7 +339,6 @@ app.get('/logout', function(req, res){
 app.get('/feedback/:date', isAuthenticated,function(req, res){
     var date = req.params.date;
     var id = req.user.id;
-    var feedback;
     var goodfeedback=new Array();
     var excessfeedback=new Array();
     var lackfeedback=new Array();
@@ -349,7 +347,7 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     var kcal;
     var foods=new Array();
     var qfood='select user_id,date,food_name_ef as food from eaten_food where date = ? and user_id = ?';
-    var qfeedback = 'select RT.user_id, RT.date, RT.nutrients, RT.eaten_amount as amount, LT.min,LT.max from standard_nutrient as LT join (select RT.id as s_id, LT.* from (select LT.id as user_id, LT.sex as user_sex, LT.age as user_age, RT.date as date, RT.eaten_nutrient_details as nutrients, RT.eaten_amount as eaten_amount from user as LT join (select * from eaten_nutrient where user_id = ? and date = ?)   as RT on RT.user_id = LT.id) as LT join standard as RT on RT.sex = LT.user_sex and LT.user_age>=RT.from_age and LT.user_age <= RT.to_age) as RT on LT.standard_nutrient_details = RT.nutrients and LT.standard_id = RT.s_id';
+    var qfeedback = 'SELECT user_id, date, nutrients, amount, min,max FROM feedback WHERE user_id = ? and date = ?';
     var qsport = 'select sports_name, consumption from sports order by rand() limit 3';
     connection.query(qfood,[date,id],function(err,data){
       if(err) throw err;
@@ -357,7 +355,7 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
     connection.query(qsport,function(err,data){
       if(err) throw err;
-      sports = _.cloneDeep(data);    
+      sports = _.cloneDeep(data);
     });
     connection.query(qfeedback,[id,date],function(err,data){
       if(err) throw err;
@@ -391,38 +389,65 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
     });
 });
 
-app.get('/water', function(req, res) { 
 
-        
-  var sql = 'SELECT * FROM water_diary';
-  connection.query(sql, function(err, rows, fields){
+app.get("/month", isAuthenticated, function(req, res){
+  var userid = req.user.id;
+  res.render('month', {userid:userid})
+});
+
+app.get('/water', isAuthenticated,function(req, res) { 
+
+   var userid = req.user.id;
+   var today = new Date();
+   var month = today.getUTCMonth() + 1;
+   var day = today.getUTCDate();
+   var year = today.getUTCFullYear();
+   today = year + "-" + month + "-" + day;
+
+   //오늘 해당 유저의 수분 섭취 기록 없으면 0컵으로 insert
+    var sql = 'INSERT INTO water_diary (user_id, cups, date) SELECT * FROM (SELECT "' + userid + '" , 0, "' + today + '") AS tmp WHERE NOT EXISTS (SELECT user_id, date FROM water_diary WHERE user_id= ? AND date =?) LIMIT 1';
+    var params = [userid, today];
+    connection.query(sql, params ,function(err, row, fields){
+      if(err)
+        console.log(err)
+    });
+
+  //해당 유저가 어떤 날 마신 
+  var sql = 'SELECT * FROM water_diary where user_id = ? and date = ?';
+  connection.query(sql,[userid,today] ,function(err, row, fields){
       if(err){
         console.log(err);
       }
       else {
-        for(var i=0; i<rows.length; i++){
-          console.log(rows[i].cups);
-        }
+        console.log(row[0].cups);
       }
 
     var title = 'Welcome!';
     var description = '오늘 마신 물의 컵수를 선택해주세요~';
-    var cups = rows[0].cups;
-    var user = rows[0].user_id;
+    var cups = row[0].cups;
+    var user = row[0].user_id;
 
- 
+
     res.render('water_home', {title:title, description:description, cups:cups, user:user});
-          
-    
+
+
   }); //connection
 
 }); //app
 
-app.get('/water/page/:pageId', function(req, res) { 
+
+app.get('/water/page/:pageId', isAuthenticated, function(req, res) { 
     var title = req.params.pageId;
-    var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE id=?';
-      var params = ["yumin",title,"2020-06-01",1];
-       
+    var userid = req.user.id;
+    var today = new Date();
+    var month = today.getUTCMonth() + 1;
+    var day = today.getUTCDate();
+    var year = today.getUTCFullYear();
+    today = year + "-" + month + "-" + day;
+
+    var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE user_id=? and date=?';
+    var params = [userid, title, today, userid, today];
+     
       connection.query(sql,params, function(err, rows, fields){
         if(err){
           console.log(err);
@@ -438,14 +463,11 @@ app.get('/water/page/:pageId', function(req, res) {
     }
     else{
         var description = '아직 부족해요~!';
-        
+
         res.render('water_cups', {title:title, description:description});
       }
     });
 });
- 
-
-       
 
 //catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -458,5 +480,3 @@ app.use(function(req, res, next) {
 app.listen(10000,  function() {
  console.log('App listening on port 10000!');
 });
-
-
