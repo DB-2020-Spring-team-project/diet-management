@@ -24,7 +24,7 @@ body{
   font-weight: 500;
 }
 
-.box a{
+.box a, p{
   color: white;
 }
 
@@ -65,6 +65,25 @@ body{
 .box input[type = "submit"]:hover{
   background: #2ecc71;
 }
+
+.box button{
+  background: #3498db;
+  border: 0;
+  width: 100px;
+  height: 40px;
+  border-radius: 3px;
+  text-align : center;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  display: block;
+  margin: 15px auto;
+}
+.box button:hover{
+  animation-name: shake;
+}
+
+
 
 
 /* welcome page */
