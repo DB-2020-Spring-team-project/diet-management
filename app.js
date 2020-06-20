@@ -434,8 +434,39 @@ app.get('/feedback/:date', isAuthenticated,function(req, res){
 
 
 app.get("/month", isAuthenticated, function(req, res){
+  var today = new Date();
   var userid = req.user.id;
-  res.render('month', {userid:userid})
+  var month = today.getUTCMonth() + 1;
+  var url=[];
+  var start=[];
+  var events = [];
+  var q = 'SELECT date_format(date, "%Y-%m-%d") date , nutrients, amount FROM feedback WHERE user_id = ? and Month(date) = ? and (nutrients = "열량" or nutrients = "탄수화물" or nutrients = "단백질" or nutrients = "지방") ORDER BY date ASC'
+  var qdate = 'SELECT DISTINCT date_format(date, "%Y-%m-%d") date  FROM feedback WHERE user_id = ? and Month(date) = ? ORDER BY date ASC';
+  connection.query(qdate,[userid,month],function(err,data){
+    if(err) throw err;
+    for( var i = 0 ; i < data.length ; i++){
+      start[i]=data[i].date;
+      url[i]='http://52.79.44.154:10000/feedback/'+data[i].date;
+      events[i]={'title': [] , 'start': start[i], 'url': url[i]};
+    }
+  });
+  connection.query(q,[userid,month],function(err,data){
+    if(err) throw err;
+    for( var i = 0 ; i < data.length ; i++){
+      var amount_nutreint = data[i].nutrients + ": " + data[i].amount;
+      var title = amount_nutreint;
+      for( var j = 0 ; j < events.length ; j++){
+        var tdate = data[i].date;
+        var tstart = events[j].start;
+        if(tstart == tdate) {
+          events[j].title.push(title);
+        }
+      }
+    }
+    console.log(events);
+    res.render('month', {events:events ,userid:userid})
+  });
+  
 });
 
 app.get('/water', isAuthenticated,function(req, res) {

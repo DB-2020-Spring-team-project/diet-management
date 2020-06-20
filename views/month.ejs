@@ -8,17 +8,16 @@
 <script src='inter_main.js'></script>
 <script src='daygrid_main.js'></script>
 <script>
-
-  document.addEventListener('DOMContentLoaded', function() {
+  var tevents = "<%= events%>";
+  console.log(tevents);
+   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    
     var calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [ 'interaction', 'dayGrid' ],
       defaultDate: '2020-06-01',
       editable: true,
       eventLimit: true, // allow "more" link when too many events
       events: [
-        /*
         {
           title: 'Conference',
           start: '2020-05-11',
@@ -28,7 +27,7 @@
           title: 'Meeting',
           start: '2020-05-12T10:30:00',
           end: '2020-05-12T12:30:00'
-        },*/
+        },
         {
           title: '탄\n단\n지',
           start: '2020-06-05'
@@ -40,7 +39,6 @@
         }
       ]
     });
-
     calendar.render();
   });
 
@@ -65,6 +63,5 @@
 
   <div id='calendar'></div>
   <h1><%=userid%>의 영양 캘린더</h1>
-
 </body>
 </html>
