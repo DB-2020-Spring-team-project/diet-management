@@ -8,7 +8,15 @@
 <script src='inter_main.js'></script>
 <script src='daygrid_main.js'></script>
 <script>
-  var tevents = "<%= events%>";
+  var tevents = [];
+  <% for(var i=0; i<events.length; i++){%>
+    tevents[<%=i%>] = {
+      "title" : "<%=events[i].title%>",
+      "start" : "<%=events[i].start%>",
+      "url" : "<%=events[i].url%>"
+    }
+  <% } %>;
+
   console.log(tevents);
    document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
@@ -17,27 +25,7 @@
       defaultDate: '2020-06-01',
       editable: true,
       eventLimit: true, // allow "more" link when too many events
-      events: [
-        {
-          title: 'Conference',
-          start: '2020-05-11',
-          end: '2020-05-13'
-        },
-        {
-          title: 'Meeting',
-          start: '2020-05-12T10:30:00',
-          end: '2020-05-12T12:30:00'
-        },
-        {
-          title: '탄\n단\n지',
-          start: '2020-06-05'
-        },
-        {
-          title: 'go to feedback',
-          url: 'http://google.com/',  //피드백 url
-          start: '2020-06-06'
-        }
-      ]
+      events: tevents
     });
     calendar.render();
   });

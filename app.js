@@ -463,7 +463,10 @@ app.get("/month", isAuthenticated, function(req, res){
         }
       }
     }
-    console.log(events);
+    console.log(events.length);
+    console.log(userid);
+    console.log("렌더");
+    
     res.render('month', {events:events ,userid:userid})
   });
   
