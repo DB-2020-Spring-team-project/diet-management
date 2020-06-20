@@ -1,0 +1,101 @@
+body{
+  font-family:arial,sans-serif;
+  font-size:100%;
+  background: #34495e;
+  color:#fff;
+  /* background: #efefef;
+  color: #324047; */
+  margin:3em;
+}
+.footer {
+            clear: both;
+            text-align: center;
+            padding-top: 10px;
+            box-sizing: border-box;
+}
+.footer li {
+  position: relative;
+  list-style-type: none;
+  padding-left: 2rem;
+  margin-bottom: 0.4rem;
+  font-size: 18px;
+}
+.footer li:before{
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 5px;
+  height: 11px;
+  border-width: 0 2px 2px 0;
+  border-style: solid;
+  border-color: #00a8a8;
+  transform-origin: bottom left;
+  transform: rotate(45deg);
+}
+.container div {
+            padding: 1%;
+            box-sizing: border-box;
+            min-height: 500px;
+}
+
+.container ul{
+  padding-inline-start: 20px;
+}
+.container h3{
+  text-align: center;
+}
+.container li {
+  position: relative;
+  list-style-type: none;
+  padding-left: 2rem;
+  margin-bottom: 0.4rem;
+  font-size: 18px;
+}
+
+.container li:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 5px;
+    height: 11px;
+    border-width: 0 2px 2px 0;
+    border-style: solid;
+    border-color: #00a8a8;
+    transform-origin: bottom left;
+    transform: rotate(45deg);
+}
+
+
+/* Boilerplate stuff */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+.container{
+  /* font-size:20px; */
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Helvetica Neue", sans-serif;
+  /* font-size: 62.5%; */
+}
+
+
+
+/* HOME & LOGOUT BUTTON*/
+.home{
+  width:30px;
+  height:30px;
+  filter: invert(100%) sepia(0%) saturate(7499%) hue-rotate(66deg) brightness(101%) contrast(105%);
+  position: absolute;
+  right: 70px;
+  top:20px
+}
+.logout{
+  right: 20px;
+}

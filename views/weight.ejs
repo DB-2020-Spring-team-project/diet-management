@@ -11,7 +11,7 @@
 <form method="POST" action='/weight'>
 <!-- <input type="text" name="weight" placeholder = 'weight'> -->
 <select name="weight">
-  <%for(var i = 30; i <= 100; i++)
+  <%for(var i = 20; i <= 100; i++)
   {%>
     <option value="<%=i%>"><%=i%></option>
   <%}%>
@@ -24,8 +24,8 @@
   { var data  = rows[i];%>
    <li>
      <a href="#">
-       <h2><%=data.d%></h2>
-       <p> <%=data.weight%>kg </p>
+       <h2><b><%=data.d%></b></h2><br>
+       <p><%=data.weight%>kg </p>
      </a>
    </li>
    <li>

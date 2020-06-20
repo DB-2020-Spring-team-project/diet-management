@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset='utf-8'>
-        <link rel="stylesheet" href="/stylesheets/master.css">
+        <link rel="stylesheet" href="/stylesheets/add_food.css">
         <script type='text/javascript' src='./jquery/lib/jquery.js'></script>
         <script type='text/javascript' src='./jquery/lib/jquery.bgiframe.min.js'></script>
         <script type='text/javascript' src='./jquery/lib/jquery.ajaxQueue.js'></script>
@@ -13,34 +13,33 @@
     <body>
       <a href ="/home" ><img src="https://image.flaticon.com/icons/svg/2948/2948025.svg" class="home"></a>
       <a href='/logout' > <img src="https://image.flaticon.com/icons/svg/126/126467.svg" class="home logout"></a>
-      <div class="eaten_food">
+      <section>
+      <div class="like_food">
         <script>
             var foods = [];
             <% for(var i=0; i<food_names.length; i++){%>
                 foods[<%=i%>] = "<%=food_names[i]%>"; <% } %>;
         </script>
-        
+
         <h1>좋아하는 음식 추가</h1>
         <form action='/like_food' method='post'>
-            <p>
-                음식 :
-                <input type='text' id='food' name='food'>
-            </p>
-                <input type='submit' value='추가하기'>
+                <input type='text' id='food' name='food' placeholder="음식">&nbsp<input type='submit' value='추가'>
+
+
         </form>
-        
+
         <div>
             <br>
             <hr>
             <p><h3><%=userid%>의 좋아하는 음식 목록</h3></p>
             <hr>
-            
+
             <div>
                 <%if (like_foods.length == 0) {%>
                     <br><br>
                     <p><%=userid%>님은 아직 등록된 음식이 없습니다.</p>
                 <% } else {%>
-                    <ul>
+                    <ul class="like_list">
                     <%for ( var i = 0; i < like_foods.length; i++){%>
                         <li>
                         <%=like_foods[i].food%>
@@ -61,5 +60,6 @@
             });
         </script>
         </div>
+        </section>
     </body>
 </html>

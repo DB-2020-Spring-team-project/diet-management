@@ -6,7 +6,6 @@ body{
   font-family:arial,sans-serif;
   font-size:100%;
   margin:3em;
-  /* background:#666; */
   background: #34495e;
   color:#fff;
 }
@@ -29,6 +28,7 @@ ul li a{
   height:10em;
   width:10em;
   padding:1em;
+  text-align: center;
 }
 ul li{
   margin:1em;
@@ -39,6 +39,8 @@ select{
   width: 100px; /* 원하는 너비설정 */
 }
 
+
+/* HOME & LOGOUT BUTTON*/
 .home{
   width:30px;
   height:30px;
