@@ -43,7 +43,7 @@ h1, p{
 }
 
 .nav input:checked ~ .menu {
-    width: 600px;
+    width: 700px;
 }
 
 .menu li {

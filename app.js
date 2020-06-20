@@ -85,9 +85,9 @@ app.post('/add_eaten_food', isAuthenticated,(req, res) => {
     //유효성 검사 about food and date
 
     var datatimeRegexp = /[0-9]{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/;
-  
+
     query = 'SELECT * FROM food where name="' + food + '"';
-    
+
     rows = sync_connection.query(query);
     if(!datatimeRegexp.test(date) || !rows[0]){
       res.render('add_failed', {food: food});
@@ -173,7 +173,7 @@ app.post('/like_food', isAuthenticated,(req, res) => {
     res.render('like_food_failed', {food: food});
     return;
   }
-  
+
   var like_food = {
     food_name_lf: food,
     user_id: userid
@@ -183,8 +183,8 @@ app.post('/like_food', isAuthenticated,(req, res) => {
     if (error) throw error;
     res.redirect('/like_food');
   });
-  
-  
+
+
 });
 
 
@@ -214,7 +214,7 @@ app.get("/'welcome'", function(req, res){
 });
 
 app.get("/home", function(req, res){
- var q = "select quote from quote where id= curdate() mod 10;";
+ var q = "select quote from quote where id= (curdate() mod 10)+1;";
  connection.query(q, function (error, result) {
  if (error) throw error;
  //console.log(result[0]);
@@ -326,7 +326,7 @@ app.post("/diary", isAuthenticated,function(req, res){
 });
 
 app.get("/weight", isAuthenticated, function(req, res){
-  var q = "select DATE_FORMAT(date, \'%y-%m-%d\') as d, weight from weigth_diary where user_id = ?"
+  var q = "select DATE_FORMAT(date, \'%Y-%m-%d\') as d, weight from weigth_diary where user_id = ?"
   connection.query(q, [req.user.id], function(err, rows){
       console.log(err);
       console.log(rows);
@@ -438,7 +438,7 @@ app.get("/month", isAuthenticated, function(req, res){
   res.render('month', {userid:userid})
 });
 
-app.get('/water', isAuthenticated,function(req, res) { 
+app.get('/water', isAuthenticated,function(req, res) {
 
    var userid = req.user.id;
    var today = new Date();
@@ -455,7 +455,7 @@ app.get('/water', isAuthenticated,function(req, res) {
         console.log(err)
     });
 
-  //해당 유저가 어떤 날 마신 
+  //해당 유저가 어떤 날 마신
   var sql = 'SELECT * FROM water_diary where user_id = ? and date = ?';
   connection.query(sql,[userid,today] ,function(err, row, fields){
       if(err){
@@ -479,7 +479,7 @@ app.get('/water', isAuthenticated,function(req, res) {
 }); //app
 
 
-app.get('/water/page/:pageId', isAuthenticated, function(req, res) { 
+app.get('/water/page/:pageId', isAuthenticated, function(req, res) {
     var title = req.params.pageId;
     var userid = req.user.id;
     var today = new Date();
@@ -490,7 +490,7 @@ app.get('/water/page/:pageId', isAuthenticated, function(req, res) {
 
     var sql = 'UPDATE water_diary SET user_id=?, cups=?, date=? WHERE user_id=? and date=?';
     var params = [userid, title, today, userid, today];
-     
+
       connection.query(sql,params, function(err, rows, fields){
         if(err){
           console.log(err);

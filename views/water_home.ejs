@@ -3,13 +3,18 @@
     <head>
       <title>수분 섭취 기록 - <%=title%> </title>
       <meta charset="utf-8">
-    </head> 
+      <link rel="stylesheet" href="/stylesheets/add_food.css">
+    </head>
     <body>
+      <a href ="/home" ><img src="https://image.flaticon.com/icons/svg/2948/2948025.svg" class="home"></a>
+      <a href='/logout' > <img src="https://image.flaticon.com/icons/svg/126/126467.svg" class="home logout"></a>
+      <section>
+      <div class="like_food">
       <h1><a href="/water"><%=user%>의 수분 섭취 기록</a></h1>
       <h2><%=title%></h2>
       <h3>현재까지 마신 컵수 : <%=cups%>컵</h3>
       <p><%=description%></p>
-      <ul>
+      <ul class="like_list">
         <li><a href="/water/page/1">1컵</a></li>
         <li><a href="/water/page/2">2컵</a></li>
         <li><a href="/water/page/3">3컵</a></li>
@@ -21,7 +26,7 @@
         <li><a href="/water/page/9">9컵</a></li>
         <li><a href="/water/page/10">10컵</a></li>
       </ul>
-
+      </div>
+      </section>
     </body>
     </html>
-    
