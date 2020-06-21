@@ -440,9 +440,9 @@ app.get("/month", isAuthenticated, function(req, res){
   var url=[];
   var start=[];
   var events = [];
-  var q = 'SELECT date_format(date, "%Y-%m-%d") date , nutrients, amount FROM feedback WHERE user_id = ? and Month(date) = ? and (nutrients = "열량" or nutrients = "탄수화물" or nutrients = "단백질" or nutrients = "지방") ORDER BY date ASC'
-  var qdate = 'SELECT DISTINCT date_format(date, "%Y-%m-%d") date  FROM feedback WHERE user_id = ? and Month(date) = ? ORDER BY date ASC';
-  connection.query(qdate,[userid,month],function(err,data){
+  var q = 'SELECT date_format(date, "%Y-%m-%d") date , nutrients, amount FROM feedback WHERE user_id = ? and nutrients = "열량" ORDER BY date ASC'
+  var qdate = 'SELECT DISTINCT date_format(date, "%Y-%m-%d") date  FROM feedback WHERE user_id = ? ORDER BY date ASC';
+  connection.query(qdate,[userid],function(err,data){
     if(err) throw err;
     for( var i = 0 ; i < data.length ; i++){
       start[i]=data[i].date;
@@ -450,10 +450,10 @@ app.get("/month", isAuthenticated, function(req, res){
       events[i]={'title': [] , 'start': start[i], 'url': url[i]};
     }
   });
-  connection.query(q,[userid,month],function(err,data){
+  connection.query(q,[userid],function(err,data){
     if(err) throw err;
     for( var i = 0 ; i < data.length ; i++){
-      var amount_nutreint = data[i].nutrients + ": " + data[i].amount;
+      var amount_nutreint = data[i].nutrients + ": " + Math.round(data[i].amount) + "kcal";
       var title = amount_nutreint;
       for( var j = 0 ; j < events.length ; j++){
         var tdate = data[i].date;
@@ -463,10 +463,6 @@ app.get("/month", isAuthenticated, function(req, res){
         }
       }
     }
-    console.log(events.length);
-    console.log(userid);
-    console.log("렌더");
-    
     res.render('month', {events:events ,userid:userid})
   });
   

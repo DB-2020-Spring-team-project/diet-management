@@ -7,6 +7,14 @@
 <script src='core_main.js'></script>
 <script src='inter_main.js'></script>
 <script src='daygrid_main.js'></script>
+<body>
+  <div style = "float: right">
+    <a href ="/home" ><img src="https://image.flaticon.com/icons/svg/2948/2948025.svg" width = "30" class="home"></a>
+    <a href='/logout' > <img src="https://image.flaticon.com/icons/svg/126/126467.svg" width = "30" class="home logout"></a>
+  </div>
+  <h1><%=userid%>의 영양 캘린더</h1>
+  <div id='calendar'></div>
+</body>
 <script>
   var tevents = [];
   <% for(var i=0; i<events.length; i++){%>
@@ -31,6 +39,7 @@
   });
 
 </script>
+
 <style>
 
   body {
@@ -47,9 +56,4 @@
 
 </style>
 </head>
-<body>
-
-  <div id='calendar'></div>
-  <h1><%=userid%>의 영양 캘린더</h1>
-</body>
 </html>
