@@ -50,13 +50,13 @@ const sync_mysql      = require('sync-mysql');
 const sync_connection = new sync_mysql({
   host     : '52.79.44.154',
   user     : 'user',
-  password : '1234',
+  password : '',
   database : 'nutrient_app'
 });
 var connection = mysql.createConnection({
   host     : '52.79.44.154',
   user     : 'user',
-  password : '1234',
+  password : '',
   database : 'nutrient_app'
 });
 
